@@ -1,5 +1,8 @@
+import 'package:cocktailproject/pages/AboutAppPage.dart';
+import 'package:cocktailproject/pages/SettingPage.dart';
 import 'package:flutter/material.dart';
 
+import 'LogOutPage.dart';
 import 'LoginPage.dart';
 import 'RegisterPage.dart';
 
@@ -28,7 +31,7 @@ class _HomePageState extends State<HomePage> {
           ),
           // Semi-transparent Overlay
           Container(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withOpacity(0.7),
             // Adjust opacity as needed
           ),
           // Floating Drink Me Text
@@ -76,7 +79,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-
               //Register button
               Padding(
                 padding: const EdgeInsets.only(bottom: 100.0),
@@ -98,6 +100,22 @@ class _HomePageState extends State<HomePage> {
                        // Set button color
                     ),
                     child: Text('Register', style: TextStyle(color: Colors.black87, fontSize: 30)),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingPage()),
+                  );
+                },
+                child: Text(
+                  'Continue as Guest', // Your link text
+                  style: TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                      fontSize: 25
                   ),
                 ),
               ),
