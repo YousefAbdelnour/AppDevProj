@@ -1,5 +1,7 @@
-import 'package:cocktailproject/pages/RegisterPage.dart';
 import 'package:flutter/material.dart';
+
+import '../sessionmanager.dart';
+import 'LoginPage.dart';
 
 class LogOutPage extends StatefulWidget {
   const LogOutPage({Key? key}) : super(key: key);
@@ -12,7 +14,18 @@ class _LogOutPageState extends State<LogOutPage> {
   Color buttonColor = Color(0xFFE0D9CB);
 
   //TODO Backend Log Out Function
-  void logout() {}
+  void logout() {
+    SessionManager sessionManager = SessionManager();
+    sessionManager.logout();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+      (Route<dynamic> route) => false,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('You have successfully logged out.')),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +33,13 @@ class _LogOutPageState extends State<LogOutPage> {
       body: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                Colors.white,
-                buttonColor,
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            )
-        ),
+          colors: [
+            Colors.white,
+            buttonColor,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        )),
         child: Stack(
           children: [
             // Background Image at the top
@@ -80,30 +92,38 @@ class _LogOutPageState extends State<LogOutPage> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   //Login Button and Register Link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            logout();
-                          },
-                          child: Text('Log Out', style: TextStyle(color: Colors.white),),
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blueAccent,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.zero)),
-                          ),
+                      ElevatedButton(
+                        onPressed: () {
+                          logout();
+                        },
+                        child: Text(
+                          'Log Out',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.zero)),
+                        ),
                       ),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text('Cancel', style: TextStyle(color: Colors.white)),
+                        child: Text('Cancel',
+                            style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blueAccent,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.zero)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.zero)),
                         ),
                       ),
                     ],
