@@ -15,26 +15,21 @@ class UserAccountManager {
     final file = File('$path/users.json');
     if (!await file.exists()) {
       await file.create();
-      await file
-          .writeAsString(json.encode([]));
+      await file.writeAsString(json.encode([]));
     }
     return file;
   }
 
   Future<void> writeUser(User user) async {
     final file = await _localFile;
-    List<dynamic> users = json.decode(await file.readAsString());
-    users.removeWhere((element) => element['email'] == user.email);
-    users.add(user.toJson());
-    await file.writeAsString(json.encode(users));
+    await file.writeAsString(json.encode(user.toJson()));
   }
 
   Future<User?> readUserByEmail(String email) async {
     final file = await _localFile;
-    List<dynamic> users = json.decode(await file.readAsString());
-    var userData = users.firstWhere((element) => element['email'] == email,
-        orElse: () => null);
-    if (userData != null) {
+    Map<String, dynamic>? userData =
+        json.decode(await file.readAsString()) as Map<String, dynamic>?;
+    if (userData != null && userData['email'] == email) {
       return User.fromJson(userData);
     }
     return null;
