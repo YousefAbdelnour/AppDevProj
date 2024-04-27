@@ -2,6 +2,7 @@ import 'package:cocktailproject/pages/AboutAppPage.dart';
 import 'package:cocktailproject/pages/SettingPage.dart';
 import 'package:flutter/material.dart';
 
+import 'IngredientPage.dart';
 import 'LogOutPage.dart';
 import 'LoginPage.dart';
 import 'RegisterPage.dart';
@@ -107,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                 onTap: (){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SettingPage()),
+                    MaterialPageRoute(builder: (context) => IngredientPage()),
                   );
                 },
                 child: Text(

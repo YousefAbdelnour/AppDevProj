@@ -1,6 +1,8 @@
 import 'package:cocktailproject/pages/RegisterPage.dart';
 import 'package:flutter/material.dart';
 
+import 'MyHomePage.dart';
+
 class LogOutPage extends StatefulWidget {
   const LogOutPage({Key? key}) : super(key: key);
 
@@ -12,7 +14,13 @@ class _LogOutPageState extends State<LogOutPage> {
   Color buttonColor = Color(0xFFE0D9CB);
 
   //TODO Backend Log Out Function
-  void logout() {}
+  void logout(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => HomePage()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +73,6 @@ class _LogOutPageState extends State<LogOutPage> {
               ),
             ),
 
-            // Email and Password TextFields
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
