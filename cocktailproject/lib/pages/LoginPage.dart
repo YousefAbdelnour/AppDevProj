@@ -1,6 +1,6 @@
 import 'package:cocktailproject/pages/RegisterPage.dart';
 import 'package:flutter/material.dart';
-import 'MyHomePage.dart';
+import 'HomePage.dart';
 import '../sessionmanager.dart';
 
 class LoginPage extends StatefulWidget {
