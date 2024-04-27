@@ -12,18 +12,32 @@ class UserAccountManager {
 
   Future<File> get _localFile async {
     final path = await _localPath;
-    return File('$path/users.json');
+    final file = File('$path/users.json');
+    if (!await file.exists()) {
+      await file.create();
+      await file
+          .writeAsString(json.encode([]));
+    }
+    return file;
   }
 
-  Future<File> writeUser(User user) async {
+  Future<void> writeUser(User user) async {
     final file = await _localFile;
-    return file.writeAsString(json.encode(user.toJson()));
+    List<dynamic> users = json.decode(await file.readAsString());
+    users.removeWhere((element) => element['email'] == user.email);
+    users.add(user.toJson());
+    await file.writeAsString(json.encode(users));
   }
 
-  Future<User> readUser() async {
+  Future<User?> readUserByEmail(String email) async {
     final file = await _localFile;
-    final contents = await file.readAsString();
-    return User.fromJson(json.decode(contents));
+    List<dynamic> users = json.decode(await file.readAsString());
+    var userData = users.firstWhere((element) => element['email'] == email,
+        orElse: () => null);
+    if (userData != null) {
+      return User.fromJson(userData);
+    }
+    return null;
   }
 
   Future<void> registerUser(String email, String password, String name) async {
@@ -32,8 +46,8 @@ class UserAccountManager {
   }
 
   Future<bool> verifyPassword(String email, String password) async {
-    User storedUser = await readUser();
-    if (storedUser.email == email) {
+    User? storedUser = await readUserByEmail(email);
+    if (storedUser != null) {
       String hashedPassword = sha256.convert(utf8.encode(password)).toString();
       return storedUser.passwordHash == hashedPassword;
     }
@@ -41,16 +55,16 @@ class UserAccountManager {
   }
 
   Future<void> addUserDrink(String email, String drinkId) async {
-    User user = await readUser();
-    if (user.email == email && !user.savedDrinks.contains(drinkId)) {
+    User? user = await readUserByEmail(email);
+    if (user != null && !user.savedDrinks.contains(drinkId)) {
       user.savedDrinks.add(drinkId);
       await writeUser(user);
     }
   }
 
   Future<void> addRecentlyViewedDrink(String email, String drinkId) async {
-    User user = await readUser();
-    if (user.email == email) {
+    User? user = await readUserByEmail(email);
+    if (user != null) {
       user.recentlyViewedDrinks.remove(drinkId);
       user.recentlyViewedDrinks.add(drinkId);
       if (user.recentlyViewedDrinks.length > 10) {

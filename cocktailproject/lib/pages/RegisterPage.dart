@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../UserManager.dart';
 import 'LoginPage.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -10,7 +11,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-
   Color buttonColor = const Color(0xFFE0D9CB);
 
   //Controllers for accessing the email and password Textfields
@@ -19,23 +19,49 @@ class _RegisterPageState extends State<RegisterPage> {
   var _name = TextEditingController();
 
   //TODO Backend Register Function
-  void register(){
+  void register() async {
+    var email = _emailController.text.trim();
+    var password = _passwordController.text.trim();
+    var name = _name.text.trim();
 
+    if (email.isEmpty || password.isEmpty || name.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
+    // try {
+      UserAccountManager manager = UserAccountManager();
+      await manager.registerUser(email, password, name);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registration successful! Please log in.')),
+      );
+    // }
+    // catch (e) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text('Failed to register: $e')),
+    //   );
+    // }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                Colors.white,
-                buttonColor,
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            )
-        ),
+          colors: [
+            Colors.white,
+            buttonColor,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        )),
         child: Stack(
           children: [
             // Background Image at the top
@@ -157,10 +183,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => LoginPage()),
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage()),
                           );
                         },
                         child: const Text(
@@ -168,12 +195,13 @@ class _RegisterPageState extends State<RegisterPage> {
                           style: TextStyle(
                               color: Colors.blue,
                               decoration: TextDecoration.underline,
-                              fontSize: 16
-                          ),
+                              fontSize: 16),
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {register();},
+                        onPressed: () {
+                          register();
+                        },
                         child: const Text('Register'),
                       ),
                     ],

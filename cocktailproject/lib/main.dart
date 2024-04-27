@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'cocktail.dart';
 import 'pages/LandingPage.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -25,6 +25,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-
-

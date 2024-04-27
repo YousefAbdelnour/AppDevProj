@@ -1,5 +1,7 @@
 import 'package:cocktailproject/pages/RegisterPage.dart';
 import 'package:flutter/material.dart';
+import 'MyHomePage.dart';
+import '../sessionmanager.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -9,7 +11,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   Color buttonColor = Color(0xFFE0D9CB);
 
   //Controllers for accessing the email and password Textfields
@@ -17,23 +18,51 @@ class _LoginPageState extends State<LoginPage> {
   var _passwordController = TextEditingController();
 
   //TODO Backend Login Function
-  void login(){
+  void login() async {
+    var email = _emailController.text.trim();
+    var password = _passwordController.text.trim();
 
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Email and password cannot be empty')),
+      );
+      return;
+    }
+
+    try {
+      SessionManager sessionManager = SessionManager();
+      bool loggedIn = await sessionManager.login(email, password);
+      if (loggedIn) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomePage()), // Assuming you have a homepage
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Invalid credentials')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login error: $e')),
+      );
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                Colors.white,
-                buttonColor,
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            )
-        ),
+          colors: [
+            Colors.white,
+            buttonColor,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        )),
         child: Stack(
           children: [
             // Background Image at the top
@@ -138,23 +167,25 @@ class _LoginPageState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => RegisterPage()),
+                            MaterialPageRoute(
+                                builder: (context) => RegisterPage()),
                           );
                         },
                         child: Text(
                           'Don\'t have an account? Click here', // Your link text
                           style: TextStyle(
-                            color: Colors.blue,
-                            decoration: TextDecoration.underline,
-                            fontSize: 16
-                          ),
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                              fontSize: 16),
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {login();},
+                        onPressed: () {
+                          login();
+                        },
                         child: Text('Login'),
                       ),
                     ],
