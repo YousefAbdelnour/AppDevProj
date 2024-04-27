@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
+<<<<<<< HEAD
+import 'LandingPage.dart';
+=======
 import '../sessionmanager.dart';
 import 'LoginPage.dart';
+>>>>>>> 1732879106986fa821e468fe9a6b18b03e7da317
 
 class LogOutPage extends StatefulWidget {
   const LogOutPage({Key? key}) : super(key: key);
@@ -14,6 +18,13 @@ class _LogOutPageState extends State<LogOutPage> {
   Color buttonColor = Color(0xFFE0D9CB);
 
   //TODO Backend Log Out Function
+<<<<<<< HEAD
+  void logout(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => LandingPage()),
+=======
   void logout() {
     SessionManager sessionManager = SessionManager();
     sessionManager.logout();
@@ -24,6 +35,7 @@ class _LogOutPageState extends State<LogOutPage> {
     );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('You have successfully logged out.')),
+>>>>>>> 1732879106986fa821e468fe9a6b18b03e7da317
     );
   }
 
@@ -77,7 +89,6 @@ class _LogOutPageState extends State<LogOutPage> {
               ),
             ),
 
-            // Email and Password TextFields
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
