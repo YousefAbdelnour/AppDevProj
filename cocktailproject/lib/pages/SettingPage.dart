@@ -2,7 +2,7 @@ import 'dart:ffi';
 
 import 'package:cocktailproject/pages/AboutAppPage.dart';
 import 'package:cocktailproject/pages/LogOutPage.dart';
-import 'package:cocktailproject/pages/MyHomePage.dart';
+import 'package:cocktailproject/pages/LandingPage.dart';
 import 'package:cocktailproject/pages/RegisterPage.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -110,7 +110,7 @@ class _SettingPageState extends State<SettingPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
+                          MaterialPageRoute(builder: (context) => LandingPage()),
                         );
                       },
                       child: Container(

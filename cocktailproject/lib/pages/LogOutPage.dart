@@ -1,7 +1,7 @@
 import 'package:cocktailproject/pages/RegisterPage.dart';
 import 'package:flutter/material.dart';
 
-import 'MyHomePage.dart';
+import 'LandingPage.dart';
 
 class LogOutPage extends StatefulWidget {
   const LogOutPage({Key? key}) : super(key: key);
@@ -18,7 +18,7 @@ class _LogOutPageState extends State<LogOutPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => HomePage()),
+          builder: (context) => LandingPage()),
     );
   }
 

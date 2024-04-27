@@ -2,19 +2,20 @@ import 'package:cocktailproject/pages/AboutAppPage.dart';
 import 'package:cocktailproject/pages/SettingPage.dart';
 import 'package:flutter/material.dart';
 
+import 'HomePage.dart';
 import 'IngredientPage.dart';
 import 'LogOutPage.dart';
 import 'LoginPage.dart';
 import 'RegisterPage.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class LandingPage extends StatefulWidget {
+  const LandingPage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<LandingPage> createState() => _LandingPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     // Define the color from the hexadecimal code
@@ -108,7 +109,7 @@ class _HomePageState extends State<HomePage> {
                 onTap: (){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => IngredientPage()),
+                    MaterialPageRoute(builder: (context) => HomePage()),
                   );
                 },
                 child: Text(
