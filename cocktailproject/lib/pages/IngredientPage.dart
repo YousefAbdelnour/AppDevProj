@@ -1,14 +1,19 @@
 import 'dart:ffi';
 
+import 'package:cocktailproject/ApiManager.dart';
 import 'package:cocktailproject/pages/AboutAppPage.dart';
 import 'package:cocktailproject/pages/LogOutPage.dart';
 import 'package:cocktailproject/pages/LandingPage.dart';
 import 'package:cocktailproject/pages/RegisterPage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+import '../cocktail.dart';
+
 class IngredientPage extends StatefulWidget {
-  const IngredientPage({Key? key}) : super(key: key);
+  final Cocktail cocktail; // Add parameter for cocktail ID
+  const IngredientPage({Key? key, required this.cocktail}) : super(key: key);
 
   @override
   State<IngredientPage> createState() => _IngredientPageState();
@@ -16,28 +21,30 @@ class IngredientPage extends StatefulWidget {
 
 class _IngredientPageState extends State<IngredientPage> {
   Color buttonColor = Color(0xFFE0D9CB);
-  bool _selected = false;
-  List<String> ingredients = [
-    'Ingredient 1',
-    'Ingredient 2',
-    'Ingredient 3',
-    'Ingredient 4',
-    'Ingredient 5',
-    'Ingredient 6',
-    'Ingredient 7',
-    'Ingredient 8',
-    'Ingredient 9'
-    // Add more ingredients as needed
-  ];
-
   List<bool> _checkState = [];
-
+  ApiManager api = ApiManager();
+  late Cocktail cocktail;
+  int lenghtOfIng = 0;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _checkState = List.generate(ingredients.length, (index) => false);
+    fetchCocktailDetails();
   }
+
+  void fetchCocktailDetails() async {
+      cocktail = widget.cocktail;
+      //the api returns ingredients with null value, find the cutoff index
+      for(int i = 0; i < cocktail.ingredients.length; i++){
+        if(cocktail.ingredients[i] == null){
+          lenghtOfIng = i;
+          break;
+        }
+      }
+      setState(() {
+        _checkState = List.generate(cocktail.ingredients.length, (index) => false);
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +60,6 @@ class _IngredientPageState extends State<IngredientPage> {
         )),
         child: Stack(
           children: [
-
             // Background Image at the top
             Positioned(
               top: 0,
@@ -70,27 +76,6 @@ class _IngredientPageState extends State<IngredientPage> {
               ),
             ),
 
-            // Background Image at the bottom
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                width: double.infinity,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                ),
-                child: Image.asset(
-                  'assets/cocktailHomePage.jpg',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
             Center(
               child: Padding(
                 padding: const EdgeInsets.only(top: 80),
@@ -99,7 +84,7 @@ class _IngredientPageState extends State<IngredientPage> {
                     //Name Of Drink
                     Flexible(
                       child: Text(
-                        'Coco for coconut',
+                        cocktail.name,
                         style: TextStyle(
                           fontSize: 45.0,
                           fontWeight: FontWeight.bold,
@@ -118,18 +103,18 @@ class _IngredientPageState extends State<IngredientPage> {
                     SizedBox(
                       height: 10,
                     ),
+
                     //DISPLAY IMAGE
                     ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Image.asset(
-                          'assets/testCocktail.jpg',
-                          fit: BoxFit.cover,
-                          width: 330,
-                          height: 320,
-                        )),
-                    SizedBox(
-                      height: 10,
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.network(
+                        cocktail.thumbnail,
+                        fit: BoxFit.cover,
+                        width: 330,
+                        height: 320,
+                      ),
                     ),
+
                     Padding(
                       padding: const EdgeInsets.all(1.0),
                       child: Text(
@@ -152,7 +137,7 @@ class _IngredientPageState extends State<IngredientPage> {
                     Expanded(
                       child: Scrollbar(
                         child: ListView.builder(
-                          itemCount: ingredients.length,
+                          itemCount: lenghtOfIng,
                           itemBuilder: (context, index) {
                             return CheckboxListTile(
                               value: _checkState[index],
@@ -161,7 +146,7 @@ class _IngredientPageState extends State<IngredientPage> {
                                   _checkState[index] = value ?? false;
                                 });
                               },
-                              title: Text(ingredients[index], style: TextStyle(
+                              title: Text(cocktail.ingredients[index] ?? '', style: TextStyle(
                                 fontSize: 20
                               ),),
                               controlAffinity: ListTileControlAffinity.leading,
@@ -173,28 +158,37 @@ class _IngredientPageState extends State<IngredientPage> {
                         thumbVisibility: true,
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Add your onPressed functionality here
-                      },
-                      child: Text(
-                        "Start Mixing!",
-                        style: TextStyle(
-                          color: Colors.white, // White text color
-                          fontSize: 16, // Adjust font size as needed
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.brown,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8), // Adjust border radius as needed
-                        ),
-                      ),
-                    )
+
                   ],
                 ),
               ),
             ),
+            Positioned(
+              bottom: 0, // Adjust the value as needed for vertical spacing
+              left: 0,
+              right: 0,
+              child: Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Add your onPressed functionality here
+                  },
+                  child: Text(
+                    "Start Mixing!",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.brown,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
           ],
         ),
       ),
