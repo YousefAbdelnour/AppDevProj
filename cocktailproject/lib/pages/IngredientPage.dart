@@ -4,6 +4,7 @@ import 'package:cocktailproject/ApiManager.dart';
 import 'package:cocktailproject/pages/AboutAppPage.dart';
 import 'package:cocktailproject/pages/LogOutPage.dart';
 import 'package:cocktailproject/pages/LandingPage.dart';
+import 'package:cocktailproject/pages/RecipePage.dart';
 import 'package:cocktailproject/pages/RegisterPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -146,9 +147,10 @@ class _IngredientPageState extends State<IngredientPage> {
                                   _checkState[index] = value ?? false;
                                 });
                               },
-                              title: Text(cocktail.ingredients[index] ?? '', style: TextStyle(
-                                fontSize: 20
-                              ),),
+                              title: Text(
+                                "${cocktail.ingredients[index] ?? ''} ${cocktail.measures[index] ?? ''}",
+                                style: TextStyle(fontSize: 20),
+                              ),
                               controlAffinity: ListTileControlAffinity.leading,
                               activeColor: Colors.brown,
                             );
@@ -170,7 +172,10 @@ class _IngredientPageState extends State<IngredientPage> {
               child: Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    // Add your onPressed functionality here
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RecipePage(cocktail: cocktail)),
+                    );
                   },
                   child: Text(
                     "Start Mixing!",
