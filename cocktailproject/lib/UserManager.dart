@@ -1,38 +1,54 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 import 'user.dart';
-import 'package:crypto/crypto.dart';
-import 'dart:convert';
 
 class UserAccountManager {
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
+  Future<Directory> _getDirectory() async {
+    final directory = (await getExternalStorageDirectories())?.first;
+    final path = Directory('${directory?.path}/UserManager/');
+    if (await path.exists()) {
+      return path;
+    } else {
+      final Directory appDocDirNewFolder = await path.create(recursive: true);
+      return appDocDirNewFolder;
+    }
   }
 
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    final file = File('$path/users.json');
+  Future<File> _getFile() async {
+    final directory = await _getDirectory();
+    return File('${directory.path}users.json');
+  }
+
+  Future<void> writeUsers(List<User> users) async {
+    final file = await _getFile();
+    await file.writeAsString(jsonEncode(users.map((u) => u.toJson()).toList()));
+  }
+
+  Future<List<User>> readUsers() async {
+    final file = await _getFile();
     if (!await file.exists()) {
-      await file.create();
-      await file.writeAsString(json.encode([]));
+      return [];
     }
-    return file;
+    final String content = await file.readAsString();
+    final List<dynamic> jsonData = jsonDecode(content);
+    return jsonData.map((data) => User.fromJson(data)).toList();
   }
 
   Future<void> writeUser(User user) async {
-    final file = await _localFile;
-    await file.writeAsString(json.encode(user.toJson()));
+    List<User> users = await readUsers();
+    users.removeWhere((u) => u.email == user.email); // Remove if exists
+    users.add(user);
+    await writeUsers(users);
   }
 
   Future<User?> readUserByEmail(String email) async {
-    final file = await _localFile;
-    Map<String, dynamic>? userData =
-        json.decode(await file.readAsString()) as Map<String, dynamic>?;
-    if (userData != null && userData['email'] == email) {
-      return User.fromJson(userData);
+    List<User> users = await readUsers();
+    try {
+      return users.firstWhere((user) => user.email == email);
+    } catch (e) {
+      return null;
     }
-    return null;
   }
 
   Future<void> registerUser(String email, String password, String name) async {
@@ -43,8 +59,7 @@ class UserAccountManager {
   Future<bool> verifyPassword(String email, String password) async {
     User? storedUser = await readUserByEmail(email);
     if (storedUser != null) {
-      String hashedPassword = sha256.convert(utf8.encode(password)).toString();
-      return storedUser.passwordHash == hashedPassword;
+      return storedUser.password == password;
     }
     return false;
   }

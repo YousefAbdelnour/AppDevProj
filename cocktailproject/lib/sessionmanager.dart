@@ -32,14 +32,17 @@ class SessionManager {
   Future<void> addUserDrink(String drinkId) async {
     if (currentUser != null) {
       await UserAccountManager().addUserDrink(currentUser!.email, drinkId);
-      currentUser = await UserAccountManager().readUserByEmail(currentUser!.email);
+      currentUser =
+          await UserAccountManager().readUserByEmail(currentUser!.email);
     }
   }
 
   Future<void> addRecentlyViewedDrink(String drinkId) async {
     if (currentUser != null) {
-      await UserAccountManager().addRecentlyViewedDrink(currentUser!.email, drinkId);
-      currentUser = await UserAccountManager().readUserByEmail(currentUser!.email);
+      await UserAccountManager()
+          .addRecentlyViewedDrink(currentUser!.email, drinkId);
+      currentUser =
+          await UserAccountManager().readUserByEmail(currentUser!.email);
     }
   }
 }
