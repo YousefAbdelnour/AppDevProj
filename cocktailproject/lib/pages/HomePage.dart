@@ -1,10 +1,5 @@
-import 'dart:ffi';
-
-import 'package:cocktailproject/pages/AboutAppPage.dart';
 import 'package:cocktailproject/pages/IngredientPage.dart';
-import 'package:cocktailproject/pages/LogOutPage.dart';
-import 'package:cocktailproject/pages/LandingPage.dart';
-import 'package:cocktailproject/pages/RegisterPage.dart';
+import 'package:cocktailproject/widgets/BottomNavBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -12,6 +7,7 @@ import 'package:lottie/lottie.dart';
 
 import '../ApiManager.dart';
 import '../cocktail.dart';
+import 'SettingPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -47,7 +43,22 @@ class _HomePageState extends State<HomePage> {
       print("Error fetching random cocktails: $e");
     }
   }
+  final _pageOptions = [
+    HomePage(),
+    HomePage(),
+    SettingPage()
+  ];
 
+  int _selectedIndex = 0;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => _pageOptions[_selectedIndex]),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -210,30 +221,11 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             // Background Image at the bottom (now in front of the ListView)
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                width: double.infinity,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                ),
-                child: Image.asset(
-                  'assets/cocktailHomePage.jpg',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
           ],
         ),
 
       ),
+      bottomNavigationBar: BottomNavBar(index: 0),
     );
   }
 }

@@ -76,7 +76,26 @@ class _IngredientPageState extends State<IngredientPage> {
                 ),
               ),
             ),
+            Positioned(
+              top: 10.0, // 25 padding below the top of the page
+              left: 0,
+              child: Container(
+                width: 40,
+                height: 40,
 
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: buttonColor,
+                ),
+                child: IconButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.arrow_back),
+                  color: Colors.black,
+                ),
+              ),
+            ),
             Center(
               child: Padding(
                 padding: const EdgeInsets.only(top: 80),

@@ -7,6 +7,8 @@ import 'package:cocktailproject/pages/RegisterPage.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+import '../widgets/BottomNavBar.dart';
+
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
 
@@ -48,26 +50,6 @@ class _SettingPageState extends State<SettingPage> {
               ),
             ),
             // Background Image at the bottom
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                width: double.infinity,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                ),
-                child: Image.asset(
-                  'assets/cocktailHomePage.jpg',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
             Center(
               child: Padding(
                 padding: const EdgeInsets.only(top: 80),
@@ -315,6 +297,7 @@ class _SettingPageState extends State<SettingPage> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavBar(index: 2),
     );
   }
 }

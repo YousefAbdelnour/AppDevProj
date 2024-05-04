@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../cocktail.dart';
+import '../widgets/BottomNavBar.dart';
 
 class RecipePage extends StatefulWidget {
   final Cocktail cocktail; // Add parameter for cocktail ID
@@ -15,7 +16,7 @@ class _RecipePageState extends State<RecipePage> {
   List<String> recipes = [];
   late Cocktail cocktail;
   int lengthOfIng = 0;
-
+  Color buttonColor = Color(0xFFE0D9CB);
   @override
   void initState() {
     super.initState();
@@ -68,6 +69,7 @@ class _RecipePageState extends State<RecipePage> {
                     fit: BoxFit.cover,
                   ),
                 ),
+
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 20),
@@ -106,6 +108,7 @@ class _RecipePageState extends State<RecipePage> {
                   ),
                 ),
               ),
+
               ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -170,23 +173,11 @@ class _RecipePageState extends State<RecipePage> {
                   );
                 },
               ),
-              Container(
-                width: double.infinity,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-                  image: DecorationImage(
-                    image: AssetImage(
-                      'assets/cocktailHomePage.jpg',
-                    ),
-                    fit: BoxFit.cover
-                  )
-                ),
-              ),
             ],
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavBar(index: 1,),
     );
   }
 }
