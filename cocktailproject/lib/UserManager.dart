@@ -72,6 +72,14 @@ class UserAccountManager {
     }
   }
 
+  Future<void> removeUserDrink(String email, String drinkId) async {
+    User? user = await readUserByEmail(email);
+    if (user != null && user.savedDrinks.contains(drinkId)) {
+      user.savedDrinks.remove(drinkId);
+      await writeUser(user);
+    }
+  }
+
   Future<void> addRecentlyViewedDrink(String email, String drinkId) async {
     User? user = await readUserByEmail(email);
     if (user != null) {

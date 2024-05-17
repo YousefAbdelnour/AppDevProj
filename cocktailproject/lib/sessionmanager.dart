@@ -37,6 +37,14 @@ class SessionManager {
     }
   }
 
+  Future<void> removeUserDrink(String drinkId) async {
+    if (currentUser != null) {
+      await UserAccountManager().removeUserDrink(currentUser!.email, drinkId);
+      currentUser =
+        await UserAccountManager().readUserByEmail(currentUser!.email);
+    }
+  }
+
   Future<void> addRecentlyViewedDrink(String drinkId) async {
     if (currentUser != null) {
       await UserAccountManager()

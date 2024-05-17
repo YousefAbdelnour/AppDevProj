@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-import 'LoginPage.dart';
-import 'RegisterPage.dart';
 
 class AboutAppPage extends StatefulWidget {
   const AboutAppPage({Key? key}) : super(key: key);
@@ -18,7 +16,6 @@ class _AboutAppPageState extends State<AboutAppPage> {
     Color buttonColor = Color(0xFFE0D9CB);
 
     return Scaffold(
-
       backgroundColor: Colors.transparent,
       body: Stack(
         fit: StackFit.expand,

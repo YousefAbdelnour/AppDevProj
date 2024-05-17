@@ -1,7 +1,9 @@
 import 'package:cocktailproject/pages/RegisterPage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'HomePage.dart';
 import '../sessionmanager.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -33,11 +35,13 @@ class _LoginPageState extends State<LoginPage> {
       SessionManager sessionManager = SessionManager();
       bool loggedIn = await sessionManager.login(email, password);
       if (loggedIn) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => HomePage()), // Assuming you have a homepage
-        );
+        Get.to(()=>HomePage(),
+            transition: Transition.circularReveal, duration: Duration(seconds: 2));
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //       builder: (context) => HomePage()), // Assuming you have a homepage
+        // );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Invalid credentials')),
@@ -53,6 +57,30 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+      leading: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+        ),
+        child: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/cocktailHomePage.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+    ),
       body: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -61,25 +89,9 @@ class _LoginPageState extends State<LoginPage> {
             buttonColor,
           ],
           begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
         )),
         child: Stack(
           children: [
-            // Background Image at the top
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                width: double.infinity,
-                height: 50, // Adjust height as needed
-                color: Colors.blue,
-                child: Image.asset(
-                  'assets/cocktailHomePage.jpg',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
             // Background Image at the bottom
             Positioned(
               bottom: 0,
@@ -101,39 +113,47 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-
-            //Floating Login Text
-            Positioned(
-              top: 150.0, // 25 padding below the top of the page
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Text(
-                  'Login',
-                  style: TextStyle(
-                    fontSize: 50.0, // Adjust font size as needed
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-              ),
-            ),
-
             // Email and Password TextFields
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  AnimatedTextKit(
+                    animatedTexts: [
+                      WavyAnimatedText('Login',
+                          textStyle: TextStyle(
+                            fontSize: 50.0, // Adjust font size as needed
+                            fontWeight: FontWeight.bold,
+                            color: Colors.brown,
+                          )),
+                    ],
+                    repeatForever: true,
+                    isRepeatingAnimation: true,
+                    pause: Duration(seconds: 2),
+                  ),
+                  const SizedBox(height: 20),
                   TextField(
                     decoration: InputDecoration(
                       hintText: 'Email',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(color: Colors.black),
                       ),
                       focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.circular(10),  // Make sure this matches the enabledBorder
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(color: Colors.black),
                       ),
                       fillColor: Colors.white,
@@ -141,26 +161,38 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     controller: _emailController,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   TextField(
                     controller: _passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
                       hintText: 'Password',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(color: Colors.black),
                       ),
                       focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(color: Colors.black),
                       ),
                       fillColor: Colors.white,
                       filled: true,
                     ),
                   ),
-                  SizedBox(height: 20),
 
+                  SizedBox(height: 20),
                   //Login Button and Register Link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -168,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => RegisterPage()),
@@ -178,18 +210,30 @@ class _LoginPageState extends State<LoginPage> {
                           'Don\'t have an account? Click here', // Your link text
                           style: TextStyle(
                               color: Colors.blue,
+                              fontSize: 16,
                               decoration: TextDecoration.underline,
-                              fontSize: 16),
+                              decorationColor: Colors.blue,
+                              ),
+
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          login();
-                        },
-                        child: Text('Login'),
-                      ),
                     ],
-                  )
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      login();
+                    },
+                    child: Text(
+                      'Login',
+                      style: TextStyle(color: Colors.white, fontSize: 20),  // Set the text color to white
+                    ),
+                    style: ButtonStyle(
+                      minimumSize: MaterialStateProperty.all(Size(340, 50)),
+                      backgroundColor: MaterialStateProperty.all(Colors.brown),
+                    ),
+
+                  ),
                 ],
               ),
             ),

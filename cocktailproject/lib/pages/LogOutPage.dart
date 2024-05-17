@@ -1,4 +1,7 @@
+import 'package:cocktailproject/pages/HomePage.dart';
+import 'package:cocktailproject/pages/SettingPage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'LandingPage.dart';
 import '../sessionmanager.dart';
 import 'LoginPage.dart';
@@ -20,11 +23,11 @@ class _LogOutPageState extends State<LogOutPage> {
     sessionManager.logout();
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(builder: (context) => LandingPage()),
       (Route<dynamic> route) => false,
     );
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('You have successfully logged out.')),
+      SnackBar(content: Text('You have successfully logged out.'), duration: Duration(seconds: 2),),
     );
   }
 
@@ -116,7 +119,7 @@ class _LogOutPageState extends State<LogOutPage> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          Get.off(()=>const SettingPage(), transition: Transition.fadeIn, duration: Duration(seconds: 1));
                         },
                         child: Text('Cancel',
                             style: TextStyle(color: Colors.white)),

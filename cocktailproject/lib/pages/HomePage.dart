@@ -3,10 +3,13 @@ import 'package:cocktailproject/widgets/BottomNavBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 import '../ApiManager.dart';
 import '../cocktail.dart';
+import '../sessionmanager.dart';
+import 'LoginPage.dart';
 import 'SettingPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   Color buttonColor = Color(0xFFE0D9CB);
   ApiManager api = ApiManager();
   List<Cocktail> cocktailList = [];
-
+  SessionManager sessionManager = SessionManager();
   @override
   void initState() {
     super.initState();
@@ -58,6 +61,21 @@ class _HomePageState extends State<HomePage> {
       context,
       MaterialPageRoute(builder: (context) => _pageOptions[_selectedIndex]),
     );
+  }
+
+  bool isLoggedIn(){
+    bool loggedIn = sessionManager.isLoggedIn();
+    return loggedIn;
+  }
+
+  bool isDrinkSaved(String drinkId){
+    if(sessionManager.isLoggedIn()){
+      List<String>? saved = sessionManager.currentUser?.savedDrinks;
+      if(saved!.contains(drinkId)){
+        return true;
+      }
+    }
+    return false;
   }
   @override
   Widget build(BuildContext context) {
@@ -130,11 +148,8 @@ class _HomePageState extends State<HomePage> {
                         itemCount: cocktailList.length, // Number of items in the list
                         itemBuilder: (context, index) {
                           return GestureDetector(
-                            onTap: (){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => IngredientPage(cocktail: cocktailList[index])),
-                              );
+                            onTap: () async {
+                              Get.to(()=>IngredientPage(cocktail: cocktailList[index]), transition: Transition.native, duration: Duration(seconds: 2));
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(left:15, right: 15, bottom: 10),
@@ -155,8 +170,9 @@ class _HomePageState extends State<HomePage> {
                                 // Stack for containing bookmark icon and text
                                 child: Stack(
                                   children: [
-                                    // Positioned for the bookmark icon
+                                    //BOOKMARK ICON
                                     Positioned(
+                                      right: 0,
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
@@ -167,16 +183,37 @@ class _HomePageState extends State<HomePage> {
                                             borderRadius: BorderRadius.all(Radius.circular(30)),
                                           ),
                                           child: IconButton(
-                                            onPressed: () {
+                                            onPressed: () async {
                                               // Implement bookmark functionality here
+                                              if (isLoggedIn()) {
+                                                // Check if the drink is already saved
+                                                bool alreadySaved = isDrinkSaved(cocktailList[index].id);
+                                                // Add or remove the drink from the user's saved drinks list
+                                                if (alreadySaved) {
+                                                  await sessionManager.removeUserDrink(cocktailList[index].id);
+                                                } else {
+                                                  await sessionManager.addUserDrink(cocktailList[index].id);
+                                                }
+                                                // Update the UI to reflect the change
+                                                setState(() {
+                                                  print(sessionManager.currentUser?.savedDrinks);
+                                                });
+                                              } else {
+                                                // Redirect to the login page if the user is not logged in
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) => LoginPage()),
+                                                );
+                                              }
                                             },
                                             icon: Icon(Icons.bookmark),
-                                            color: Colors.grey,
+                                            color: isDrinkSaved(cocktailList[index].id) ? Colors.red : Colors.grey,
                                           ),
+
                                         ),
                                       ),
-                                      right: 0,
                                     ),
+
                                     // Positioned for the text at the bottom
                                     Positioned(
                                       bottom: 0,
@@ -200,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                                               "${cocktailList[index].alcoholic}", // Replace with the cocktail name
                                             style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 30,
+                                              fontSize: 25,
                                             ),
                                           ),
                                         ),
@@ -215,7 +252,6 @@ class _HomePageState extends State<HomePage> {
                       ),
 
                     ),
-
                   ],
                 ),
               ),

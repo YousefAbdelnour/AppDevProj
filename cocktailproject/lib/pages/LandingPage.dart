@@ -1,10 +1,6 @@
-import 'package:cocktailproject/pages/AboutAppPage.dart';
-import 'package:cocktailproject/pages/SettingPage.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import 'HomePage.dart';
-import 'IngredientPage.dart';
-import 'LogOutPage.dart';
 import 'LoginPage.dart';
 import 'RegisterPage.dart';
 
@@ -62,14 +58,10 @@ class _LandingPageState extends State<LandingPage> {
                 child: SizedBox(
                   width: 350.0,
                   height: 50.0,
-
                   child: ElevatedButton(
                     onPressed: () {
                       //Navigate to Login page
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                      );
+                        Get.to(()=>const LoginPage(), transition: Transition.downToUp);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: buttonColor,// Set button color
@@ -88,29 +80,23 @@ class _LandingPageState extends State<LandingPage> {
                   width: 350.0,
                   height: 50.0,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => RegisterPage()),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: buttonColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0), // Set border radius to 0 for square shape
+                      onPressed: () {
+                        Get.to(()=>const RegisterPage(), transition: Transition.upToDown);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: buttonColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0), // Set border radius to 0 for square shape
+                        ),
+                         // Set button color
                       ),
-                       // Set button color
+                      child: Text('Register', style: TextStyle(color: Colors.black87, fontSize: 30)),
                     ),
-                    child: Text('Register', style: TextStyle(color: Colors.black87, fontSize: 30)),
-                  ),
+                  )
                 ),
-              ),
               GestureDetector(
                 onTap: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                  );
+                  Get.to(()=>const HomePage(), transition: Transition.circularReveal, duration: Duration(seconds: 4));
                 },
                 child: Text(
                   'Continue as Guest', // Your link text

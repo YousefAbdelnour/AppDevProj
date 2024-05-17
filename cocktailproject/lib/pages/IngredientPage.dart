@@ -1,13 +1,8 @@
-import 'dart:ffi';
-
 import 'package:cocktailproject/ApiManager.dart';
-import 'package:cocktailproject/pages/AboutAppPage.dart';
-import 'package:cocktailproject/pages/LogOutPage.dart';
-import 'package:cocktailproject/pages/LandingPage.dart';
 import 'package:cocktailproject/pages/RecipePage.dart';
-import 'package:cocktailproject/pages/RegisterPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 import '../cocktail.dart';
@@ -76,16 +71,17 @@ class _IngredientPageState extends State<IngredientPage> {
                 ),
               ),
             ),
+
+            //POP BACK BUTTON
             Positioned(
               top: 10.0, // 25 padding below the top of the page
               left: 0,
               child: Container(
                 width: 40,
                 height: 40,
-
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: buttonColor,
+                  color: Colors.white,
                 ),
                 child: IconButton(
                   onPressed: (){
@@ -191,10 +187,8 @@ class _IngredientPageState extends State<IngredientPage> {
               child: Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => RecipePage(cocktail: cocktail)),
-                    );
+                    Get.to(()=>RecipePage(cocktail: cocktail),
+                        transition: Transition.circularReveal, duration: Duration(seconds: 2));
                   },
                   child: Text(
                     "Start Mixing!",

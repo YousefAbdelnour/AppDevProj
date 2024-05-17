@@ -7,6 +7,7 @@ import 'package:cocktailproject/pages/RegisterPage.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+import '../sessionmanager.dart';
 import '../widgets/BottomNavBar.dart';
 
 class SettingPage extends StatefulWidget {
@@ -18,7 +19,12 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   Color buttonColor = Color(0xFFE0D9CB);
+  SessionManager sessionManager = SessionManager();
 
+  bool isLoggedIn(){
+    bool loggedIn = sessionManager.isLoggedIn();
+    return loggedIn;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,38 +94,6 @@ class _SettingPageState extends State<SettingPage> {
                       height: 30,
                     ),
                     //To HomePage button
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => LandingPage()),
-                        );
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(5),
-                        width: 300,
-                        height: 50,
-                        decoration: BoxDecoration(color: Colors.white),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Home Page",
-                              style: TextStyle(
-                                fontSize: 20.0, // Adjust font size as needed
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            Icon(Icons.arrow_forward),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(
-                      height: 20,
-                    ),
                     //To Search button
                     InkWell(
                       onTap: () {},
@@ -238,30 +212,6 @@ class _SettingPageState extends State<SettingPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    //To HomePage button
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        padding: EdgeInsets.all(5),
-                        width: 300,
-                        height: 50,
-                        decoration: BoxDecoration(color: Colors.white),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Help",
-                              style: TextStyle(
-                                fontSize: 20.0, // Adjust font size as needed
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            Icon(Icons.arrow_forward),
-                          ],
-                        ),
-                      ),
-                    ),
                     SizedBox(
                       height: 30,
                     ),
@@ -300,4 +250,6 @@ class _SettingPageState extends State<SettingPage> {
       bottomNavigationBar: BottomNavBar(index: 2),
     );
   }
+
 }
+
