@@ -200,10 +200,7 @@ class _HomePageState extends State<HomePage> {
                                                 });
                                               } else {
                                                 // Redirect to the login page if the user is not logged in
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(builder: (context) => LoginPage()),
-                                                );
+                                                Get.to(()=>const LoginPage(), transition: Transition.rightToLeftWithFade);
                                               }
                                             },
                                             icon: Icon(Icons.bookmark),

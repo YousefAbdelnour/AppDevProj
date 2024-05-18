@@ -32,7 +32,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     });
 
     if (_selectedIndex == 2 && !isLoggedIn()) {
-      Get.off(()=>const LoginPage(), transition: Transition.rightToLeftWithFade);
+      Get.to(()=>const LoginPage(), transition: Transition.rightToLeftWithFade);
     } else {
       Navigator.pushReplacement(
         context,
