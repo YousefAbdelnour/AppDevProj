@@ -1,11 +1,15 @@
 import 'package:cocktailproject/ApiManager.dart';
+import 'package:cocktailproject/pages/HomePage.dart';
 import 'package:cocktailproject/pages/RecipePage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 import '../cocktail.dart';
+import '../sessionmanager.dart';
+import 'LoginPage.dart';
 
 class IngredientPage extends StatefulWidget {
   final Cocktail cocktail; // Add parameter for cocktail ID
@@ -21,10 +25,26 @@ class _IngredientPageState extends State<IngredientPage> {
   ApiManager api = ApiManager();
   late Cocktail cocktail;
   int lenghtOfIng = 0;
+  SessionManager sessionManager = SessionManager();
   @override
   void initState() {
     super.initState();
     fetchCocktailDetails();
+  }
+
+  bool isLoggedIn(){
+    bool loggedIn = sessionManager.isLoggedIn();
+    return loggedIn;
+  }
+
+  bool isDrinkSaved(String drinkId){
+    if(sessionManager.isLoggedIn()){
+      List<String>? saved = sessionManager.currentUser?.savedDrinks;
+      if(saved!.contains(drinkId)){
+        return true;
+      }
+    }
+    return false;
   }
 
   void fetchCocktailDetails() async {
@@ -85,7 +105,8 @@ class _IngredientPageState extends State<IngredientPage> {
                 ),
                 child: IconButton(
                   onPressed: (){
-                    Navigator.pop(context);
+                    Get.off(()=>HomePage());
+                    //Navigator.pop(context);
                   },
                   icon: Icon(Icons.arrow_back),
                   color: Colors.black,
@@ -121,15 +142,55 @@ class _IngredientPageState extends State<IngredientPage> {
                     ),
 
                     //DISPLAY IMAGE
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Image.network(
-                        cocktail.thumbnail,
-                        fit: BoxFit.cover,
-                        width: 330,
-                        height: 320,
-                      ),
+                    Stack(
+                      alignment: Alignment.topRight, // Ensure the alignment of the Stack is set properly
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.network(
+                            cocktail.thumbnail,
+                            fit: BoxFit.cover,
+                            width: 330,
+                            height: 320,
+                          ),
+                        ),
+                        //BOOKMARK ICON
+                        Positioned(
+                          top: 8, // Add top padding to ensure it's not too close to the edge
+                          right: 8, // Add right padding to ensure it's not too close to the edge
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(Radius.circular(30)),
+                            ),
+                            child: IconButton(
+                              onPressed: () async {
+                                if (isLoggedIn()) {
+                                  // Check if the drink is already saved
+                                  bool alreadySaved = isDrinkSaved(cocktail.id);
+                                  // Add or remove the drink from the user's saved drinks list
+                                  if (alreadySaved) {
+                                    await sessionManager.removeUserDrink(cocktail.id);
+                                  } else {
+                                    await sessionManager.addUserDrink(cocktail.id);
+                                  }
+                                  setState(() {
+                                    print(sessionManager.currentUser?.savedDrinks);
+                                  });
+                                } else {
+                                  Get.to(() => const LoginPage(), transition: Transition.rightToLeftWithFade);
+                                }
+                              },
+                              icon: Icon(Icons.bookmark),
+                              color: isDrinkSaved(cocktail.id) ? Colors.red : Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+
 
                     Padding(
                       padding: const EdgeInsets.all(1.0),

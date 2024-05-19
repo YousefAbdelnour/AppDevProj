@@ -147,12 +147,19 @@ class _HomePageState extends State<HomePage> {
                       child: ListView.builder(
                         itemCount: cocktailList.length, // Number of items in the list
                         itemBuilder: (context, index) {
+                          // IF LOGGED IN, ON CLICK ADD CLICKED DRINK TO RECENTLY VIEW
+                          // TRAVEL
                           return GestureDetector(
                             onTap: () async {
+                              if(isLoggedIn()){
+                                sessionManager.addRecentlyViewedDrink(cocktailList[index].id);
+                              }
                               Get.to(()=>IngredientPage(cocktail: cocktailList[index]), transition: Transition.native, duration: Duration(seconds: 2));
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(left:15, right: 15, bottom: 10),
+
+                              // IMAGE THUMBNAIL
                               child: Container(
                                 width: 300, // Adjusted width
                                 height: 350,
@@ -167,6 +174,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
+
                                 // Stack for containing bookmark icon and text
                                 child: Stack(
                                   children: [
@@ -184,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                           child: IconButton(
                                             onPressed: () async {
-                                              // Implement bookmark functionality here
+
                                               if (isLoggedIn()) {
                                                 // Check if the drink is already saved
                                                 bool alreadySaved = isDrinkSaved(cocktailList[index].id);
@@ -194,12 +202,11 @@ class _HomePageState extends State<HomePage> {
                                                 } else {
                                                   await sessionManager.addUserDrink(cocktailList[index].id);
                                                 }
-                                                // Update the UI to reflect the change
+
                                                 setState(() {
                                                   print(sessionManager.currentUser?.savedDrinks);
                                                 });
                                               } else {
-                                                // Redirect to the login page if the user is not logged in
                                                 Get.to(()=>const LoginPage(), transition: Transition.rightToLeftWithFade);
                                               }
                                             },
