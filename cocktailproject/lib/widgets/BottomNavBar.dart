@@ -4,9 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../pages/SearchPage.dart';
 import '../pages/LoginPage.dart';
 import '../pages/SavedPage.dart';
+import '../pages/ExplorePage.dart';
 import '../sessionmanager.dart';
+
+
 
 class BottomNavBar extends StatefulWidget {
   BottomNavBar({super.key, required this.index});
@@ -19,8 +23,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
   SessionManager sessionManager = SessionManager();
   final _pageOptions = [
     HomePage(),
-    HomePage(),
-    HomePage(),
+    SearchPage(),
+    ExplorePage(),
     SavedPage(),
     SettingPage()
   ];

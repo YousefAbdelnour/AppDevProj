@@ -66,11 +66,18 @@ class ApiManager {
   }
 
   Future<dynamic> _fetchData(Uri url) async {
-    var response = await http.get(url);
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to load data');
+    try {
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        return data;
+      } else {
+        print('Failed to load data: ${response.statusCode} ${response.reasonPhrase}');
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+      throw Exception('Error fetching data');
     }
   }
 }
