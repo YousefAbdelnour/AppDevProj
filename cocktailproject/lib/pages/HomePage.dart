@@ -22,45 +22,28 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Color buttonColor = Color(0xFFE0D9CB);
   ApiManager api = ApiManager();
-  List<Cocktail> cocktailList = [];
+  late Future<List<Cocktail>> _cocktailListFuture;
   SessionManager sessionManager = SessionManager();
+
   @override
   void initState() {
     super.initState();
-    fetchRandomCocktails();
+    _cocktailListFuture = fetchRandomCocktails();
   }
 
-  void fetchRandomCocktails() async {
+  Future<List<Cocktail>> fetchRandomCocktails() async {
+    List<Cocktail> randomCocktails = [];
     try {
-      List<Cocktail> randomCocktails = [];
       for (int i = 0; i < 5; i++) {
         var cocktailData = await api.fetchRandomCocktail();
         var cocktail = Cocktail.fromJson(cocktailData['drinks'][0]);
         randomCocktails.add(cocktail);
       }
-      setState(() {
-        cocktailList = randomCocktails;
-      });
     } catch (e) {
       // Handle error appropriately
       print("Error fetching random cocktails: $e");
     }
-  }
-  final _pageOptions = [
-    HomePage(),
-    HomePage(),
-    SettingPage()
-  ];
-
-  int _selectedIndex = 0;
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => _pageOptions[_selectedIndex]),
-    );
+    return randomCocktails;
   }
 
   bool isLoggedIn(){
@@ -144,114 +127,126 @@ class _HomePageState extends State<HomePage> {
                       height: 10,
                     ),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: cocktailList.length, // Number of items in the list
-                        itemBuilder: (context, index) {
-                          // IF LOGGED IN, ON CLICK ADD CLICKED DRINK TO RECENTLY VIEW
-                          // TRAVEL
-                          return GestureDetector(
-                            onTap: () async {
-                              if(isLoggedIn()){
-                                sessionManager.addRecentlyViewedDrink(cocktailList[index].id);
-                              }
-                              Get.to(()=>IngredientPage(cocktail: cocktailList[index]), transition: Transition.native, duration: Duration(seconds: 2));
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(left:15, right: 15, bottom: 10),
+                      child: FutureBuilder<List<Cocktail>>(
+                        future: _cocktailListFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(child: Text("Error fetching data"));
+                          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                            return Center(child: Text("No saved recipes"));
+                          } else {
+                            return ListView.builder(
+                              itemCount: snapshot.data!.length, // Number of items in the list
+                              itemBuilder: (context, index) {
+                                final cocktail = snapshot.data![index];
+                                // IF LOGGED IN, ON CLICK ADD CLICKED DRINK TO RECENTLY VIEW
+                                // TRAVEL
+                                return GestureDetector(
+                                  onTap: () async {
+                                    if(isLoggedIn()){
+                                      sessionManager.addRecentlyViewedDrink(cocktail.id);
+                                    }
+                                    Get.to(()=>IngredientPage(cocktail: cocktail), transition: Transition.native, duration: Duration(seconds: 2));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left:15, right: 15, bottom: 10),
 
-                              // IMAGE THUMBNAIL
-                              child: Container(
-                                width: 300, // Adjusted width
-                                height: 350,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(cocktailList[index].thumbnail), // Replace with your image asset
-                                    fit: BoxFit.cover,
-                                  ),
-                                  border: Border.all(
-                                    color: Colors.black, // Border color
-                                    width: 1, // Border width
-                                  ),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-
-                                // Stack for containing bookmark icon and text
-                                child: Stack(
-                                  children: [
-                                    //BOOKMARK ICON
-                                    Positioned(
-                                      right: 0,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          width: 40,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.all(Radius.circular(30)),
-                                          ),
-                                          child: IconButton(
-                                            onPressed: () async {
-
-                                              if (isLoggedIn()) {
-                                                // Check if the drink is already saved
-                                                bool alreadySaved = isDrinkSaved(cocktailList[index].id);
-                                                // Add or remove the drink from the user's saved drinks list
-                                                if (alreadySaved) {
-                                                  await sessionManager.removeUserDrink(cocktailList[index].id);
-                                                } else {
-                                                  await sessionManager.addUserDrink(cocktailList[index].id);
-                                                }
-
-                                                setState(() {
-                                                  print(sessionManager.currentUser?.savedDrinks);
-                                                });
-                                              } else {
-                                                Get.to(()=>const LoginPage(), transition: Transition.rightToLeftWithFade);
-                                              }
-                                            },
-                                            icon: Icon(Icons.bookmark),
-                                            color: isDrinkSaved(cocktailList[index].id) ? Colors.red : Colors.grey,
-                                          ),
-
+                                    // IMAGE THUMBNAIL
+                                    child: Container(
+                                      width: 300, // Adjusted width
+                                      height: 350,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: NetworkImage(cocktail.thumbnail), // Replace with your image asset
+                                          fit: BoxFit.cover,
                                         ),
+                                        border: Border.all(
+                                          color: Colors.black, // Border color
+                                          width: 1, // Border width
+                                        ),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
-                                    ),
 
-                                    // Positioned for the text at the bottom
-                                    Positioned(
-                                      bottom: 0,
-                                      child: Container(
-                                        width: 363, // Adjusted width
-                                        height: 120,
-                                        decoration: BoxDecoration(
-                                          color: Colors.brown,
-                                          border: Border.all(
-                                            color: Colors.black, // Border color set to white
-                                            width: 2, // Border width
-                                          ),
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(15),
-                                            bottomRight: Radius.circular(15),
-                                          ),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text("${cocktailList[index].name}\n"
-                                              "${cocktailList[index].alcoholic}", // Replace with the cocktail name
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 25,
+                                      // Stack for containing bookmark icon and text
+                                      child: Stack(
+                                        children: [
+                                          //BOOKMARK ICON
+                                          Positioned(
+                                            right: 0,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                width: 40,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                                                ),
+                                                child: IconButton(
+                                                  onPressed: () async {
+                                                    if (isLoggedIn()) {
+                                                      // Check if the drink is already saved
+                                                      bool alreadySaved = isDrinkSaved(cocktail.id);
+                                                      // Add or remove the drink from the user's saved drinks list
+                                                      if (alreadySaved) {
+                                                        await sessionManager.removeUserDrink(cocktail.id);
+                                                      } else {
+                                                        await sessionManager.addUserDrink(cocktail.id);
+                                                      }
+                                                      setState(() {
+
+                                                      });
+                                                    } else {
+                                                      Get.to(()=>const LoginPage(), transition: Transition.rightToLeftWithFade);
+                                                    }
+                                                  },
+                                                  icon: Icon(Icons.bookmark),
+                                                  color: isDrinkSaved(cocktail.id) ? Colors.red : Colors.grey,
+                                                ),
+
+                                              ),
                                             ),
                                           ),
-                                        ),
+
+                                          // Positioned for the text at the bottom
+                                          Positioned(
+                                            bottom: 0,
+                                            child: Container(
+                                              width: 363, // Adjusted width
+                                              height: 120,
+                                              decoration: BoxDecoration(
+                                                color: Colors.brown,
+                                                border: Border.all(
+                                                  color: Colors.black, // Border color set to white
+                                                  width: 2, // Border width
+                                                ),
+                                                borderRadius: BorderRadius.only(
+                                                  bottomLeft: Radius.circular(15),
+                                                  bottomRight: Radius.circular(15),
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Text("${cocktail.name}\n"
+                                                    "${cocktail.alcoholic}", // Replace with the cocktail name
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 25,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
+                                  ),
+                                );
+                              },
+                            );
+                          }
                         },
                       ),
 

@@ -84,12 +84,13 @@ class _LoginPageState extends State<LoginPage> {
       body: Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
-          colors: [
-            Colors.white,
-            buttonColor,
-          ],
-          begin: Alignment.topCenter,
-        )),
+              colors: [
+                Colors.white,
+                buttonColor,
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            )),
         child: Stack(
           children: [
             // Background Image at the bottom

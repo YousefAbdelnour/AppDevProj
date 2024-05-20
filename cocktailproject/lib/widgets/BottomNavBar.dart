@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../pages/LoginPage.dart';
+import '../pages/SavedPage.dart';
 import '../sessionmanager.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -19,6 +20,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
   final _pageOptions = [
     HomePage(),
     HomePage(),
+    HomePage(),
+    SavedPage(),
     SettingPage()
   ];
   bool isLoggedIn(){
@@ -31,8 +34,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
       _selectedIndex = index;
     });
 
-    if (_selectedIndex == 2 && !isLoggedIn()) {
+    if (_selectedIndex == 4 && !isLoggedIn() || _selectedIndex == 3 && !isLoggedIn()) {
       Get.to(()=>const LoginPage(), transition: Transition.rightToLeftWithFade);
+      _selectedIndex = 0;
     } else {
       Navigator.pushReplacement(
         context,
@@ -63,12 +67,21 @@ class _BottomNavBarState extends State<BottomNavBar> {
           label: 'Search',
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.explore_outlined),
+          label: 'Explore',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.bookmark),
+          label: 'Saved',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.settings),
           label: 'Settings',
         ),
       ],
       selectedItemColor: Colors.white,
       backgroundColor: Colors.brown,
+      type: BottomNavigationBarType.fixed,
     );
   }
 }

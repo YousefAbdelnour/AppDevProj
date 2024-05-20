@@ -1,10 +1,13 @@
 import 'dart:ffi';
 
 import 'package:cocktailproject/pages/AboutAppPage.dart';
+import 'package:cocktailproject/pages/HistoryPage.dart';
 import 'package:cocktailproject/pages/LogOutPage.dart';
 import 'package:cocktailproject/pages/LandingPage.dart';
 import 'package:cocktailproject/pages/RegisterPage.dart';
+import 'package:cocktailproject/pages/SavedPage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 import '../sessionmanager.dart';
@@ -124,7 +127,9 @@ class _SettingPageState extends State<SettingPage> {
                     ),
                     //To HomePage button
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Get.off(()=>const SavedPage(), transition: Transition.leftToRight);
+                      },
                       child: Container(
                         padding: EdgeInsets.all(5),
                         width: 300,
@@ -152,7 +157,9 @@ class _SettingPageState extends State<SettingPage> {
                     ),
                     //To HomePage button
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Get.off(()=>const HistoryPage(), transition: Transition.leftToRight);
+                      },
                       child: Container(
                         padding: EdgeInsets.all(5),
                         width: 300,
@@ -208,7 +215,6 @@ class _SettingPageState extends State<SettingPage> {
                         ),
                       ),
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
@@ -247,9 +253,8 @@ class _SettingPageState extends State<SettingPage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(index: 2),
+      bottomNavigationBar: BottomNavBar(index: 4),
     );
   }
-
 }
 
