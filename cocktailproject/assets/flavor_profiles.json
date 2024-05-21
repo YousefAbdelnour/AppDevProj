@@ -1,0 +1,8 @@
+{
+  "sweet": ["sugar", "honey", "syrup"],
+  "sour": ["lemon", "lime", "vinegar"],
+  "bitter": ["bitters", "coffee", "cocoa"],
+  "salty": ["salt", "olive brine"],
+  "spicy": ["ginger", "chili", "pepper"],
+  "fruity": ["orange", "pineapple", "apple"]
+}

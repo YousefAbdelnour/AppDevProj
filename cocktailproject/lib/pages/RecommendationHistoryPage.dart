@@ -1,5 +1,9 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:cocktailproject/pages/IngredientPage.dart';
+import 'package:cocktailproject/widgets/BottomNavBar.dart';
 import 'package:cocktailproject/ApiManager.dart';
+import 'package:cocktailproject/pages/LoginPage.dart';
 import 'package:cocktailproject/cocktail.dart';
 import 'package:cocktailproject/pages/RecommendationFlavorPage.dart';
 import 'package:cocktailproject/widgets/BottomNavBar.dart';
@@ -35,6 +39,13 @@ class _RecommendationHistoryPageState extends State<RecommendationHistoryPage> {
     } catch (e) {
       print("Error fetching history recommendations: $e");
     }
+
+    // Randomly select 3 recommendations if more than 3 exist
+    if (recommendations.length > 3) {
+      recommendations.shuffle();
+      recommendations = recommendations.take(3).toList();
+    }
+
     return recommendations;
   }
 
@@ -130,6 +141,15 @@ class _RecommendationHistoryPageState extends State<RecommendationHistoryPage> {
                       ],
                     ),
                     SizedBox(height: 10),
+                    Text(
+                      "Make them again:",
+                      style: TextStyle(
+                        fontSize: 20.0, // Adjust font size as needed
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    SizedBox(height: 10),
                     Expanded(
                       child: FutureBuilder<List<Cocktail>>(
                         future: _historyRecommendationsFuture,
@@ -150,7 +170,9 @@ class _RecommendationHistoryPageState extends State<RecommendationHistoryPage> {
                                     if (isLoggedIn()) {
                                       sessionManager.addRecentlyViewedDrink(cocktail.id);
                                     }
-                                    // Add navigation to the detailed page if necessary
+                                    Get.to(() => IngredientPage(cocktail: cocktail),
+                                        transition: Transition.native,
+                                        duration: Duration(seconds: 2));
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
@@ -192,7 +214,7 @@ class _RecommendationHistoryPageState extends State<RecommendationHistoryPage> {
                                                       }
                                                       setState(() {});
                                                     } else {
-                                                      // Implement login navigation if necessary
+                                                      Get.to(() => const LoginPage(), transition: Transition.rightToLeftWithFade);
                                                     }
                                                   },
                                                   icon: Icon(Icons.bookmark),
