@@ -33,6 +33,7 @@ class _SavedPageState extends State<SavedPage> {
         var cocktail = Cocktail.fromJson(cocktailData['drinks'][0]);
         list.add(cocktail);
       }
+      list = list.reversed.toList();
     } catch (e) {
       // Handle error appropriately
       print("Error fetching random cocktails: $e");

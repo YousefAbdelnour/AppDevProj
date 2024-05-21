@@ -10,7 +10,6 @@ import '../ApiManager.dart';
 import '../cocktail.dart';
 import '../sessionmanager.dart';
 import 'LoginPage.dart';
-import 'SettingPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

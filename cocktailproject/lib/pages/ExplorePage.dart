@@ -128,7 +128,11 @@ class _ExplorePageState extends State<ExplorePage> {
                       children: [
                         ElevatedButton.icon(
                           onPressed: () {
-                            Get.to(() => RecommendationHistoryPage(), transition: Transition.rightToLeftWithFade);
+                            if (isLoggedIn()) {
+                              Get.to(() => RecommendationHistoryPage(), transition: Transition.rightToLeftWithFade);
+                            }else{
+                              Get.to(() => LoginPage(), transition: Transition.rightToLeft);
+                            }
                           },
                           icon: Icon(Icons.history, color: Colors.white),
                           label: Text("History", style: TextStyle(color: Colors.white)),
@@ -140,7 +144,11 @@ class _ExplorePageState extends State<ExplorePage> {
                         SizedBox(width: 10),
                         ElevatedButton.icon(
                           onPressed: () {
-                            Get.to(() => RecommendationFlavorPage(), transition: Transition.rightToLeftWithFade);
+                            if (isLoggedIn()) {
+                              Get.to(() => RecommendationFlavorPage(), transition: Transition.rightToLeftWithFade);
+                            }else{
+                              Get.to(() => LoginPage(), transition: Transition.rightToLeft);
+                            }
                           },
                           icon: Icon(Icons.local_drink, color: Colors.white),
                           label: Text("Flavor", style: TextStyle(color: Colors.white)),
