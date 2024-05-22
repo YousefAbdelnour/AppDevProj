@@ -12,6 +12,7 @@ import 'package:lottie/lottie.dart';
 
 import '../sessionmanager.dart';
 import '../widgets/BottomNavBar.dart';
+import 'SearchPage.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -99,7 +100,9 @@ class _SettingPageState extends State<SettingPage> {
                     //To HomePage button
                     //To Search button
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Get.off(()=>const SearchPage(), transition: Transition.leftToRight);
+                      },
                       child: Container(
                         padding: EdgeInsets.all(5),
                         width: 300,
