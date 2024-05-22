@@ -42,6 +42,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       Get.to(()=>const LoginPage(), transition: Transition.rightToLeftWithFade);
       _selectedIndex = 0;
     } else {
+      //Get.to(()=>_pageOptions[_selectedIndex], transition: Transition.rightToLeftWithFade);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => _pageOptions[_selectedIndex]),

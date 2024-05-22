@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                           } else if (snapshot.hasError) {
                             return Center(child: Text("Error fetching data"));
                           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                            return Center(child: Text("No saved recipes"));
+                            return Center(child: Text("No Drinks"));
                           } else {
                             return ListView.builder(
                               itemCount: snapshot.data!.length, // Number of items in the list

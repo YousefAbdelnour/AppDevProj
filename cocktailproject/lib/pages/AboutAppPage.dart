@@ -58,10 +58,9 @@ class _AboutAppPageState extends State<AboutAppPage> {
             child: Container(
               width: 40,
               height: 40,
-
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: buttonColor,
+                color: Colors.white,
               ),
               child: IconButton(
                 onPressed: (){
@@ -91,8 +90,8 @@ class _AboutAppPageState extends State<AboutAppPage> {
                 ),
                 Divider(color: Colors.white,),
                 Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, '
-                      'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                  "Want to mix your own drinks? Try our app 'Drink Me'"
+                      " where we provide all the instructions you need to get from empty cup, to cup full of fun. ​",
                   style: TextStyle(
                     fontSize: 20.0, // Adjust font size as needed
                     fontWeight: FontWeight.bold,

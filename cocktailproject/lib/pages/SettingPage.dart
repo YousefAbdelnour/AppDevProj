@@ -1,15 +1,10 @@
-import 'dart:ffi';
-
 import 'package:cocktailproject/pages/AboutAppPage.dart';
 import 'package:cocktailproject/pages/HistoryPage.dart';
 import 'package:cocktailproject/pages/LogOutPage.dart';
-import 'package:cocktailproject/pages/LandingPage.dart';
-import 'package:cocktailproject/pages/RegisterPage.dart';
 import 'package:cocktailproject/pages/SavedPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-
 import '../sessionmanager.dart';
 import '../widgets/BottomNavBar.dart';
 import 'SearchPage.dart';
